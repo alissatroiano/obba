@@ -2,11 +2,12 @@ import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { HOST, getOutletFullname, outletAbbr } from '../../utils/config'
 
 const useStyles = makeStyles(theme => ({
@@ -55,8 +56,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
-export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerErrorMsg, queueMaxPax }) {
-	const [open, setOpen] = useState(false)
+export default function QueueDialog({ setQueueNumber, queueNumber, serverErrorMsg, setServerErrorMsg, queueMaxPax }) {
 	const [buttonHidden, setButtonHidden] = useState(false)
 	const [outletFullname, setOutletFullname] = useState(getOutletFullname(outletAbbr))
 	const [newQueue, setNewQueue] = useState({
@@ -111,23 +111,6 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 		return { isValid, hasCountryCode, formattedNumber, errorMsg }
 	}
 
-	const handleClickOpen = () => {
-		setOpen(true)
-	}
-
-	const handleClose = () => {
-		setOpen(false)
-		setNewQueue({
-			name: '',
-			phoneNo: '',
-			paxNo: '',
-			birthDate: '',
-			gender: 'male',
-			member: false,
-			email: '',
-			outlet: outletFullname,
-		})
-	}
 
 	const handleChange = event => {
 		const id = event.target.id
@@ -164,6 +147,7 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 			member: joinMember,
 		}
 		console.log(updatedQueue)
+
 		const postData = async newQueue => {
 			setButtonHidden(true)
 			try {
@@ -193,6 +177,28 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 			}
 		})
 	}
+
+	const [open, setOpen] = useState(!!queueNumber || !!serverErrorMsg)
+
+	const handleClickOpen = () => {
+		setOpen(true)
+	}
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			handleClose()
+			setQueueNumber('')
+			setServerErrorMsg('')
+		}, 10000)
+		return () => clearTimeout(timer)
+	}, [setQueueNumber, setServerErrorMsg])
+
+	console.log(queueNumber)
+
+	const handleClose = () => {
+		setOpen(false)
+	}
+
 
 	const renderMemberRegister = () => {
 		if (joinMember === true) {
@@ -259,47 +265,45 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 	return (
 		<div>
 		<form autoComplete="off" onSubmit={e => handleSubmit(e, newQueue)} className={classes.root}>
-						<div>
-							<TextField
-								margin="normal"
-								fullWidth
-								variant="outlined"
-								id="name"
-								label="Name"
-								value={newQueue.name}
-								type="text"
-								onChange={handleChange}
-								required
-								autoFocus={true}
-							/>
-							<TextField
-								margin="normal"
-								fullWidth
-								variant="outlined"
-								id="phoneNo"
-								label="Phone Number"
-								type="tel"
-								value={newQueue.phoneNo}
-								onChange={handleChange}
-								helperText={phoneErrorMsg}
-								required
-								autoFocus={true}
+			<TextField
+				margin="normal"
+				fullWidth
+				variant="outlined"
+				id="name"
+				label="Name"
+				value={newQueue.name}
+				type="text"
+				onChange={handleChange}
+				required
+				autoFocus={true}
+			/>
+			<TextField
+				margin="normal"
+				fullWidth
+				variant="outlined"
+				id="phoneNo"
+				label="Phone Number"
+				type="tel"
+				value={newQueue.phoneNo}
+				onChange={handleChange}
+				helperText={phoneErrorMsg}
+				required
+				autoFocus={true}
+			/>
+			<TextField
+				margin="normal"
+				fullWidth
+				variant="outlined"
+				id="paxNo"
+				label="Party Size"
+				type="number"
+				value={newQueue.paxNo}
+				onChange={handleChange}
+				required
+				InputProps={{ inputProps: { min: 1, max: queueMaxPax } }}
+			/>
 
-							/>
-							<TextField
-								margin="normal"
-								fullWidth
-								variant="outlined"
-								id="paxNo"
-								label="Party Size"
-								type="number"
-								value={newQueue.paxNo}
-								onChange={handleChange}
-								required
-								InputProps={{ inputProps: { min: 1, max: queueMaxPax } }}
-							/>
-
-							{/* <FormControlLabel
+			{/* <FormControlLabel
 								label="Join Member"
 								control={
 									<Checkbox
@@ -313,16 +317,40 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 								}
 							/>
 							{renderMemberRegister()} */}
-						</div>
-						<div className={classes.buttonWrapper}>
-							<Button onClick={handleClose} color="primary">
-								Cancel
-							</Button>
-							<Button type="submit" color="primary" disabled={buttonHidden}>
-								Add
-							</Button>
-						</div>
-					</form>
-					</div>
+			<div className={classes.buttonWrapper}>
+				<Button onClick={handleClose} color="primary">
+					Cancel
+				</Button>
+				<Button type="submit" color="primary" onSubmit={handleSubmit} onClick={handleClickOpen}>
+					Add
+				</Button>
+			</div>
+		</form>
+			<Dialog
+			open={open}
+			onClose={handleClose}
+			disableBackdropClick
+			disableEscapeKeyDown
+			aria-labelledby="alert-dialog-title"
+			aria-describedby="alert-dialog-description"
+		>
+			<DialogTitle id="alert-dialog-title">Queue info</DialogTitle>
+			<DialogContent>
+				<DialogContentText id="alert-dialog-description">
+					{serverErrorMsg ? (
+						serverErrorMsg
+					) : (
+						<>
+						You queue number will be{' '}
+							<span style={{ fontSize: '2rem', fontWeight: '800' }}>{queueNumber}</span>, and we you
+							inform you once you queue is ready to be assign, thanks.
+						</>
+					)}
+				</DialogContentText>
+			</DialogContent>
+			<DialogActions></DialogActions>
+		</Dialog>
+		</div>
+
 	)
-};
+}
