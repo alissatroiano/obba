@@ -112,7 +112,7 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 
 		setNewQueue({
 			name: '',
-			phoneNo: '+65 ',
+			phoneNo: '+65',
 			paxNo: '',
 			birthDate: '',
 			gender: 'male',
