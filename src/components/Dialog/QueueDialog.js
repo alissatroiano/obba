@@ -59,6 +59,7 @@ const useStyles = makeStyles(theme => ({
 		minWidth: '100vw',
 		border: '5px solid pink',
 	},
+	
 }))
 
 export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerErrorMsg, queueMaxPax }) {
@@ -111,7 +112,7 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 
 		setNewQueue({
 			name: '',
-			phoneNo: '+65',
+			phoneNo: '+65 ',
 			paxNo: '',
 			birthDate: '',
 			gender: 'male',
@@ -123,7 +124,7 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 
 	const handleSubmit = (e, newQueue) => {
 		e.preventDefault()
-		const { valid, phoneErrorMsg } = validatePhoneNumber(newQueue.phoneNo);
+		const { valid, setPhoneErrorMsg } = validatePhoneNumber(newQueue.phoneNo);
 
 		if (!valid) {
 		  setPhoneErrorMsg('Please enter a valid 10-digit phone number');
@@ -179,13 +180,15 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 				required
 				autoFocus={true}
 			/>
-			<label>Phone Input
+			<div className='MuiTextField-root'>
+			<label className='MuiInputLabel-animated MuiInputLabel-outlined'>Phone Number</label>
 			<PhoneInput
 				margin="normal"
 				variant="outlined"
 				id="phoneNo"
 				label="Phone Number"
 				type="tel"
+				placeholder='Phone Number'
 				country="sg"
 				value={newQueue.phoneNo}
 				onChange={handleChange}
@@ -195,7 +198,7 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 					minLength: 10,
 				}}
 			/>
-			</label>
+			</div>
 			{!valid && <p>Please enter a valid 10 digit number</p>}
 			<TextField
 				margin="normal"
