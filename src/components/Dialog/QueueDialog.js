@@ -122,9 +122,11 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 
 	const handleSubmit = (e, newQueue) => {
 		e.preventDefault()
-		if (!valid) {
-			setPhoneErrorMsg(phoneErrorMsg)
-			return
+		const { isValid, hasCountryCode, formattedNumber, errorMsg } = validatePhoneNumber(newQueue.phoneNo);
+
+		if (!isValid) {
+		  setPhoneErrorMsg('Please enter a valid 10-digit phone number');
+		  return;
 		}
 		const updatedQueue = {
 			...newQueue,
@@ -190,6 +192,7 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 				autoFocus={true}
 				inputProps={{
 					required: true,
+					minLength: 10,
 				}}
 			/>
 			{!valid && <p>Please enter a valid 10 digit number</p>}
