@@ -59,7 +59,6 @@ const useStyles = makeStyles(theme => ({
 		minWidth: '100vw',
 		border: '5px solid pink',
 	},
-	
 }))
 
 export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerErrorMsg, queueMaxPax }) {
@@ -82,16 +81,15 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 	const [open, setOpen] = useState(false)
 	const [phoneNo, setPhoneNo] = useState('')
 
-	const handleChange = (value) => {
+	const handleChange = value => {
 		const id = event.target.id
 		if (id == 'phoneNo') {
-			setPhoneNo(id);
-			setValid(validatePhoneNumber(id));
+			setPhoneNo(id)
+			setValid(validatePhoneNumber(id))
 		}
 		if (id === 'validator') {
 			setjoinMember(event.target.checked)
-		}
-		else {
+		} else {
 			setNewQueue({ ...newQueue, [id]: event.target.value })
 		}
 		console.log('HandleChange event:', event)
@@ -99,8 +97,8 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 	}
 
 	const validatePhoneNumber = phoneNo => {
-		const phoneNumberPattern = /^\d{10}$/;
-		return phoneNumberPattern.test(phoneNo);
+		const phoneNumberPattern = /^\d{10}$/
+		return phoneNumberPattern.test(phoneNo)
 	}
 
 	const handleClickOpen = () => {
@@ -124,11 +122,9 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 
 	const handleSubmit = (e, newQueue) => {
 		e.preventDefault()
-		const { valid, setPhoneErrorMsg } = validatePhoneNumber(newQueue.phoneNo);
-
 		if (!valid) {
-		  setPhoneErrorMsg('Please enter a valid 10-digit phone number');
-		  return;
+			setPhoneErrorMsg(phoneErrorMsg)
+			return
 		}
 		const updatedQueue = {
 			...newQueue,
@@ -180,25 +176,22 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 				required
 				autoFocus={true}
 			/>
-			<div className='MuiTextField-root'>
-			<label className='MuiInputLabel-animated MuiInputLabel-outlined'>Phone Number</label>
+			<label>Phone Input</label>
 			<PhoneInput
 				margin="normal"
+				fullWidth
 				variant="outlined"
 				id="phoneNo"
 				label="Phone Number"
 				type="tel"
-				placeholder='Phone Number'
 				country="sg"
 				value={newQueue.phoneNo}
 				onChange={handleChange}
 				autoFocus={true}
-				required
 				inputProps={{
-					minLength: 10,
+					required: true,
 				}}
 			/>
-			</div>
 			{!valid && <p>Please enter a valid 10 digit number</p>}
 			<TextField
 				margin="normal"
