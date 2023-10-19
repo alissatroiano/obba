@@ -108,9 +108,10 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 
 	const handleClose = () => {
 		setOpen(false)
+
 		setNewQueue({
 			name: '',
-			phoneNo: '',
+			phoneNo: '+65',
 			paxNo: '',
 			birthDate: '',
 			gender: 'male',
@@ -178,7 +179,7 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 				required
 				autoFocus={true}
 			/>
-			<label>Phone Input</label>
+			<label>Phone Input
 			<PhoneInput
 				margin="normal"
 				fullWidth
@@ -190,11 +191,13 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 				value={newQueue.phoneNo}
 				onChange={handleChange}
 				autoFocus={true}
+				required
 				inputProps={{
 					required: true,
 					minLength: 10,
 				}}
 			/>
+			</label>
 			{!valid && <p>Please enter a valid 10 digit number</p>}
 			<TextField
 				margin="normal"
