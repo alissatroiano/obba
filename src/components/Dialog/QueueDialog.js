@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
 			width: '100%',
 		},
 		'& .MuiFormHelperText-root': {
-			color: '#db0011',
 			fontSize: '1rem',
 		},
 	},
@@ -55,10 +54,6 @@ const useStyles = makeStyles(theme => ({
 	memberIcon: {
 		cursor: 'pointer',
 	},
-	PhoneInput: {
-		minWidth: '100vw',
-		border: '5px solid pink',
-	},
 }))
 
 export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerErrorMsg, queueMaxPax }) {
@@ -81,21 +76,16 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 	const [open, setOpen] = useState(false)
 	const [phoneNo, setPhoneNo] = useState('')
 
-	const handleChange = value => {
-		const id = event.target.id
-		if (id == 'phoneNo') {
-			setPhoneNo(id)
-			setValid(validatePhoneNumber(id))
-		}
-		if (id === 'validator') {
-			setjoinMember(event.target.checked)
+	const handleChange = (value, id) => {	  
+		if (id === 'phoneNo') {
+		  const phoneNo = value.replace(/\D/g, '');
+		  setPhoneNo(phoneNo);
+		  setValid(validatePhoneNumber(phoneNo));
 		} else {
-			setNewQueue({ ...newQueue, [id]: event.target.value })
+		  setNewQueue({ ...newQueue, [id]: value });
 		}
-		console.log('HandleChange event:', event)
-		console.log('New Queue:', newQueue)
-	}
-
+	  }
+	  
 	const validatePhoneNumber = phoneNo => {
 		const phoneNumberPattern = /^\d{10}$/
 		return phoneNumberPattern.test(phoneNo)
@@ -107,10 +97,9 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 
 	const handleClose = () => {
 		setOpen(false)
-
 		setNewQueue({
 			name: '',
-			phoneNo: '+65',
+			phoneNo: ' +65',
 			paxNo: '',
 			birthDate: '',
 			gender: 'male',
@@ -167,43 +156,39 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 			<TextField
 				margin="normal"
 				fullWidth
-				variant="outlined"
 				id="name"
 				label="Name"
 				value={newQueue.name}
-				onChange={handleChange}
+				onChange={(e) => handleChange(e.target.value, 'name')}
 				type="text"
 				required
 				autoFocus={true}
-			/>
-			<label>Phone Input</label>
-			<PhoneInput
-				margin="normal"
-				variant="outlined"
-				id="phoneNo"
-				label="Phone Number"
-				type="tel"
-				country="sg"
-				value={newQueue.phoneNo}
-				onChange={handleChange}
-				autoFocus={true}
-				inputProps={{
-					required: true,
-				}}
-			/>
-			{!valid && <p>Please enter a valid 10 digit number</p>}
-			<TextField
+				/>
+				<PhoneInput
+					margin="normal"
+					variant="outlined"
+					id="phoneNo"
+					label="Phone Number"
+					type="tel"
+					country="sg"
+					value={newQueue.phoneNo}
+					onChange={(value) => handleChange(value, 'phoneNo')}
+					autoFocus={true}
+					inputProps={{
+						required: true,
+					}}
+					/>
+				<TextField
 				margin="normal"
 				fullWidth
-				variant="outlined"
 				id="paxNo"
 				label="Party Size"
 				type="number"
 				value={newQueue.paxNo}
-				onChange={handleChange}
+				onChange={(e) => handleChange(e.target.value, 'paxNo')}
 				required
 				InputProps={{ inputProps: { min: 1, max: 10 } }}
-			/>
+				/>
 
 			<div className={classes.buttonWrapper}>
 				<Button onClick={handleClose} color="primary">

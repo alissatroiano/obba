@@ -1,11 +1,10 @@
 .react-tel-input .form-control {
     position: relative;
-    font-size: 14px;
     letter-spacing: .01rem;
     background: #c82b2a;
     border: none;
     line-height: 30px;
-    padding: 25px;
+    padding: 28px;
     font-size: 30px;
     color: #fafafa;
     width: 100%;
@@ -27,9 +26,10 @@
 .react-tel-input .country-list .country {
     color: #0a0a0a;
     font-weight: 600;
+    font-size: 30px;
 }
 
 input.form-control:focus,
 input:focus {
-    border: 3px solid #fafafa;
+    border: 5px solid #fafafa;
 }
