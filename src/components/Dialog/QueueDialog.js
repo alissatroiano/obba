@@ -99,7 +99,7 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 		setOpen(false)
 		setNewQueue({
 			name: '',
-			phoneNo: ' +65',
+			phoneNo: '',
 			paxNo: '',
 			birthDate: '',
 			gender: 'male',
@@ -170,7 +170,6 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 					id="phoneNo"
 					label="Phone Number"
 					type="tel"
-					country="sg"
 					value={newQueue.phoneNo}
 					onChange={(value) => handleChange(value, 'phoneNo')}
 					autoFocus={true}
