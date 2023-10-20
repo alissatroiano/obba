@@ -2,6 +2,13 @@
 @import '~font-awesome/css/font-awesome.min.css';
 
 div#___gatsby {
+    background: linear-gradient(rgba(1, 0, 6, 0.65),rgba(1, 0, 15, 0.72), rgba(0, 0, 6, 0.62)), url('../../static/images/obba-dining.jpg');
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	min-height: 100vh;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     min-height: 100vh;
     overflow: hidden;
 }

@@ -8,8 +8,7 @@
     padding: 25px;
     font-size: 30px;
     color: #fafafa;
-    margin-left: 20px;
-    width: auto;
+    width: 100%;
 }
 
 .react-tel-input .flag-dropdown.open {
@@ -19,12 +18,10 @@
 }
 
 .react-tel-input {
-    font-family: 'Roboto',sans-serif;
+    font-family: 'Work Sans',sans-serif;
     font-size: 15px;
     position: relative;
-    width: 100%;
-    margin: 10px auto;
-    height: 50px;
+    width: auto;
 }
 
 .react-tel-input .country-list .country {

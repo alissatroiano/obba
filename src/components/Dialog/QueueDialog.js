@@ -179,7 +179,6 @@ export default function QueueDialog({ setQueueNumber, serverErrorMsg, setServerE
 			<label>Phone Input</label>
 			<PhoneInput
 				margin="normal"
-				fullWidth
 				variant="outlined"
 				id="phoneNo"
 				label="Phone Number"
