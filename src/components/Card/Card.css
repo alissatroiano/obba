@@ -168,7 +168,14 @@ input#paxNo {
     padding: 10px 0;
     color: #fafafa;
     margin: 8px auto;
+    border-color: none;
     border-radius: 5px;
+}
+
+input#name:focus,
+input#phoneNo,
+input#paxNo:focus {
+    border: 5px solid #fafafa;
 }
 
 .MuiInputBase-root {
