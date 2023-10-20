@@ -70,7 +70,6 @@ const useStyles = makeStyles(theme => ({
 export default function QueueEnquiryDialog({ setQueueEnqMsg, EnqErrorMsg, setEnqErrorMsg }) {
 	const [open, setOpen] = useState(false)
 	const [phoneErrorMsg, setPhoneErrorMsg] = useState('')
-
 	const [EnqNumber, setEnqNumber] = useState({
 		// queueId: ''
 		phoneNo: '65',
@@ -96,46 +95,51 @@ export default function QueueEnquiryDialog({ setQueueEnqMsg, EnqErrorMsg, setEnq
 
 	const handleSubmit = (e, EnqNumber) => {
 		e.preventDefault()
-		if (EnqNumber.phoneNo.length < 10) {
-			setPhoneErrorMsg('Please enter the correct phone number. eg. 65XXXX XXXX(X)')
-		} else {
-			const postData = async EnqNumber => {
-				try {
-					const result = await fetch(`${HOST}/queue/paxsummary/${EnqNumber.phoneNo}`, {
-						method: 'GET',
-						headers: {
-							Accept: 'application/json',
-							'Content-Type': 'application/json',
-						},
-					})
-					const data = await result.json()
-					console.log(data)
-					return data
-				} catch (error) {
-					console.log(error)
-				}
-			}
-			postData(EnqNumber).then(data => {
-				// if (data.statusCode === 400) {
-				// 	setServerErrorMsg(data.message)
-				// 	handleClose()
-				console.log(data)
-				if (data) {
-					if (data.statusCode === 500 || data.statusCode === 400) {
-						setEnqErrorMsg('No matching phone number found.' + '\n' + data.message)
-					} else {
-						if (data.summaryText === '') {
-							setQueueEnqMsg('You are the next in queue.')
-						} else {
-							setQueueEnqMsg(data.summaryText)
-						}
-					}
-
-					handleClose()
-				}
-			})
+		if (!EnqNumber.phoneNo) {
+			setPhoneErrorMsg('Please enter a phone number before checking.');
+		return;
 		}
+		if (EnqNumber.phoneNo.length < 10) {
+			setPhoneErrorMsg('Please enter a valid 10-digit phone number');
+			return;
+		} else {
+		const postData = async EnqNumber => {
+			try {
+				const result = await fetch(`${HOST}/queue/paxsummary/${EnqNumber.phoneNo}`, {
+					method: 'GET',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+				})
+				const data = await result.json()
+				console.log(data)
+				return data
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		postData(EnqNumber).then(data => {
+			// if (data.statusCode === 400) {
+			// 	setServerErrorMsg(data.message)
+			// 	handleClose()
+			console.log(data)
+			if (data) {
+				if (data.statusCode === 500 || data.statusCode === 400) {
+					setEnqErrorMsg('No matching phone number found.' + '\n' + data.message)
+				} else {
+					if (data.summaryText === '') {
+						setQueueEnqMsg('You are the next in queue.')
+					} else {
+						setQueueEnqMsg(data.summaryText)
+					}
+				}
+
+				handleClose()
+			}
+		})
 	}
+}
 
 	return (
 		<div>
@@ -168,22 +172,23 @@ export default function QueueEnquiryDialog({ setQueueEnqMsg, EnqErrorMsg, setEnq
 								onChange={handleChange}
 								required
 							/> */}
-							<PhoneInput
-								margin="normal"
-								fullWidth
-								variant="outlined"
-								id="phoneNo"
-								label="Phone Number"
-								type="text" // Change the input type to text
-								value={EnqNumber.phoneNo}
-								helperText={phoneErrorMsg}
-								onChange={handleChange}
-								required
-								autoFocus={true}
-								FormHelperTextProps={{
-									className: classes.phoneInput,
-								}}
-							/>
+						<PhoneInput
+							margin="normal"
+							fullWidth
+							variant="outlined"
+							id="phoneNo"
+							label="Phone Number"
+							type="tel"
+							value={EnqNumber.phoneNo}
+							helperText={phoneErrorMsg}
+							onChange={handleChange}
+							required
+							autoFocus={true}
+							FormHelperTextProps={{
+								className: classes.phoneInput,
+							}}
+						/>
+
 						</div>
 						<div className={classes.buttonWrapper}>
 							<Button onClick={handleClose} color="primary">
