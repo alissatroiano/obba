@@ -4,8 +4,9 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
 import React, { useState } from 'react'
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 import { HOST } from '../../utils/config.js'
 
 const useStyles = makeStyles(theme => ({
@@ -83,40 +84,18 @@ export default function QueueEnquiryDialog({ setQueueEnqMsg, EnqErrorMsg, setEnq
 
 	const handleClose = () => {
 		setOpen(false)
+
 		setEnqNumber({
-			// queueId: ''
-			phoneNo: '65',
+			phoneNo: '+65',
 		})
 	}
 
-	const handleChange = event => {
-		// const id = event.target.id
-		// if (id === 'phoneNo') {
-		// 	// const phoneNoValidation = /^\+?([0-9]{2})\)?([0-9]{8})$/
-		// 	const phoneNo = !EnqNumber.phoneNo.includes('65') ? `65 ${event.target.value}` : event.target.value
-		// 	const isValidPhoneNo = phoneNo.length <= 11
-		// 	setEnqNumber({ ...EnqNumber, phoneNo: isValidPhoneNo ? phoneNo : EnqNumber.phoneNo })
-		// } else {
-		// 	setEnqNumber({ ...EnqNumber, [id]: event.target.value })
-		// }
-		if (event.target.value.length > 11) {
-			setEnqNumber({ ...EnqNumber, [event.target.id]: EnqNumber.phoneNo })
-		} else {
-			setEnqNumber({ ...EnqNumber, [event.target.id]: event.target.value })
-		}
+	const handleChange = (value) => {
+		setEnqNumber((prevEnqNumber) => ({ ...prevEnqNumber, phoneNo: value }));
 	}
 
 	const handleSubmit = (e, EnqNumber) => {
 		e.preventDefault()
-		// const systemPhoneNo = EnqNumber.phoneNo
-		// 	.substr(1, EnqNumber.phoneNo.length)
-		// 	.split(' ')
-		// 	.join('')
-		// const updatedNum = {
-		// 	...EnqNumber,
-		// 	phoneNo: systemPhoneNo,
-		// }
-		// const phoneRegex = /^[0-9]{10}$/
 		if (EnqNumber.phoneNo.length < 10) {
 			setPhoneErrorMsg('Please enter the correct phone number. eg. 65XXXX XXXX(X)')
 		} else {
@@ -189,16 +168,16 @@ export default function QueueEnquiryDialog({ setQueueEnqMsg, EnqErrorMsg, setEnq
 								onChange={handleChange}
 								required
 							/> */}
-							<TextField
+							<PhoneInput
 								margin="normal"
 								fullWidth
 								variant="outlined"
 								id="phoneNo"
 								label="Phone Number"
-								type="number"
+								type="text" // Change the input type to text
 								value={EnqNumber.phoneNo}
-								onChange={handleChange}
 								helperText={phoneErrorMsg}
+								onChange={handleChange}
 								required
 								autoFocus={true}
 								FormHelperTextProps={{
